@@ -1,21 +1,25 @@
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Piechart from "../components/Pie";
 import { useNavigate } from "react-router-dom";
 
 const DashboardHeader = styled.header`
-  padding: 20px;
+  padding: 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   width: 100vw;
-  height: 60px;
+  height: 80px;
 
   border-bottom: 1px solid black;
 
   box-sizing: border-box;
+`;
+
+const DashboardHeaderImage = styled.img`
+  height: 60px;
 `;
 
 const DashboardTitleContainer = styled.div`
@@ -136,7 +140,11 @@ const Dashboard = () => {
 
   return (
     <div style={{ position: "absolute", width: "100vw", height: "100vh" }}>
-      <DashboardHeader></DashboardHeader>
+      <DashboardHeader>
+        <Link to="/">
+          <DashboardHeaderImage src="./images/header.png" />
+        </Link>
+      </DashboardHeader>
       <DashboardTitleContainer>
         <DashboardTitle>
           {search}&nbsp;
@@ -152,6 +160,7 @@ const Dashboard = () => {
           {l.map((item, idx) => (
             <DashboardSearchItems
               onClick={() => {
+                navigate(`/dashboard?search=${item}`);
                 setSearch(item);
               }}
               key={idx}

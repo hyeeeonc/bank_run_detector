@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const AppMain = styled.div`
+  // position: relative;
   background-image: url("./images/landing.jpg");
   background-repeat: no-repeat;
   background-position: center;
@@ -118,6 +119,13 @@ const AppInput = styled.input`
   }
 `;
 
+const IndexHeaderImage = styled.img`
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  height: 50px;
+`;
+
 function IndexPage() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
@@ -130,6 +138,7 @@ function IndexPage() {
   return (
     <div className="App">
       <AppMain>
+        <IndexHeaderImage src="/images/header_white.png" />
         <AppTextContainer>
           <AppMainText>기업의 여론이 궁금하신가요?</AppMainText>
           <AppSubText>SNS를 통해 사람들의 생각을 확인해 보세요.</AppSubText>
