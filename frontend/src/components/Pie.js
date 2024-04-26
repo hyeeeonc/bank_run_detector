@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ResponsivePie } from "@nivo/pie";
 
-const Piechart = () => {
+const Piechart = ({ data }) => {
   const handle = {
     padClick: (data) => {
       console.log(data);
@@ -19,15 +19,7 @@ const Piechart = () => {
         /**
          * chart에 사용될 데이터
          */
-        data={[
-          { id: "불안", value: 324 },
-          { id: "당황", value: 102 },
-          { id: "분노", value: 80 },
-          { id: "슬픔", value: 71 },
-          { id: "중립", value: 41 },
-          { id: "행복", value: 30 },
-          { id: "혐오", value: 88 },
-        ]}
+        data={data}
         /**
          * chart margin
          */

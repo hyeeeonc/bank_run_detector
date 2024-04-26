@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Piechart from "../components/Pie";
 import { useNavigate } from "react-router-dom";
 
+import axios from 'axios';
+
 const DashboardHeader = styled.header`
   padding: 30px;
   display: flex;
@@ -24,7 +26,7 @@ const DashboardHeaderImage = styled.img`
 
 const DashboardTitleContainer = styled.div`
   padding: 40px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   box-sizing: border-box;
 `;
 
@@ -106,12 +108,12 @@ const DashboardSearchItems = styled.div`
 
 const Footer = styled.footer`
   width: 100vw;
-  height: 100px;
+  height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding: 60px;
+  padding: 20px 60px;
   box-sizing: border-box;
 
   background-color: #f1f3f5;
@@ -127,15 +129,57 @@ const Footer = styled.footer`
 `;
 
 const Dashboard = () => {
-  const l = ["국민은행", "기업은행", "삼성전자", "네이버", "SK하이닉스", "카카오"];
   const location = useLocation();
   const [search, setSearch] = useState("");
+  const [history, setHistory] = useState([]);
   const navigate = useNavigate();
+
+  const serverAddr = process.env.REACT_APP_SERVER_ADDR + ":" + process.env.REACT_APP_SERVER_PORT
+
+  const [data, setData] = useState([
+    { id: "불안", value: 1 },
+    { id: "당황", value: 1 },
+    { id: "분노", value: 1 },
+    { id: "슬픔", value: 1 },
+    { id: "중립", value: 1 },
+    { id: "기쁨", value: 1 },
+  ]);
+
+  const fetchData = async (search) => {
+    try {
+      const response = await axios.post(serverAddr + '/api/v1/search', {
+        search: search
+      });
+      console.log(response.data)
+      setData([
+        { id: "불안", value: response.data[0] },
+        { id: "당황", value: response.data[1] },
+        { id: "분노", value: response.data[2] },
+        { id: "슬픔", value: response.data[3] },
+        { id: "중립", value: response.data[4] },
+        { id: "기쁨", value: response.data[5] },
+      ]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const fetchHistory = async () => {
+    try {
+      const response = await axios.get(serverAddr + '/api/v1/history'); // API 엔드포인트
+      setHistory(response.data); // 받은 데이터를 historyList로 설정
+    } catch (error) {
+      console.error('Error fetching history:', error);
+    }
+  };
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const searchParam = queryParams.get("search");
     setSearch(searchParam);
+
+    fetchData(searchParam);
+    fetchHistory();
   }, []);
 
   return (
@@ -153,15 +197,17 @@ const Dashboard = () => {
       </DashboardTitleContainer>
       <DashboardMainContainer>
         <DashboardChartContainer>
-          <Piechart />
+          <Piechart data={data}/>
         </DashboardChartContainer>
         <DashboardSearchKeyword>
           <DashboardSearchTitle>이전 검색어</DashboardSearchTitle>
-          {l.map((item, idx) => (
+          {history.map((item, idx) => (
             <DashboardSearchItems
               onClick={() => {
                 navigate(`/dashboard?search=${item}`);
                 setSearch(item);
+                fetchData(item)
+                fetchHistory();
               }}
               key={idx}
             >
