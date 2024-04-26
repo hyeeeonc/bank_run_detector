@@ -138,7 +138,6 @@ const Dashboard = () => {
 
   const [data, setData] = useState([
     { id: "불안", value: 1 },
-    { id: "당황", value: 1 },
     { id: "분노", value: 1 },
     { id: "슬픔", value: 1 },
     { id: "중립", value: 1 },
@@ -152,8 +151,7 @@ const Dashboard = () => {
       });
       console.log(response.data)
       setData([
-        { id: "불안", value: response.data[0] },
-        { id: "당황", value: response.data[1] },
+        { id: "불안", value: response.data[0] + response.data[1] },
         { id: "분노", value: response.data[2] },
         { id: "슬픔", value: response.data[3] },
         { id: "중립", value: response.data[4] },
